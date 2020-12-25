@@ -11,4 +11,55 @@
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
 
-// Put your code here.
+@white
+M=0
+@black
+M=-1
+
+(SETUP)
+  @8191
+  D=A
+  @offset
+  M=D
+
+(READKBD)
+  @KBD
+  D=M
+  @SETCOLORWHITE
+  D;JEQ
+
+(SETCOLORBLACK)
+  @black
+  D=M
+  @color
+  M=D
+  @FILLWITHCOLOR
+  0;JMP
+
+(SETCOLORWHITE)
+  @white
+  D=M
+  @color
+  M=D
+
+(FILLWITHCOLOR)
+  // position = SCREEN + offset
+  @SCREEN
+  D=A
+  @offset
+  D=D+M
+  @position
+  M=D
+  // set position memory to color
+  @color
+  D=M
+  @position
+  A=M
+  M=D
+  // decrement offset and jump accordingly 
+  @offset
+  MD=M-1
+  @SETUP
+  D;JLT
+  @READKBD
+  0;JMP
